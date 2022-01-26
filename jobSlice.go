@@ -20,11 +20,6 @@ func newSliceQueue() *sliceQueue{
 //
 func (q *sliceQueue) insert(item *delayJob) {
 	q.advanceMu.Lock()
-	if len(q.advanceQueue)+1 > cap(q.advanceQueue) {
-		newQueue := make([]*delayJob, len(q.advanceQueue), cap(q.advanceQueue)+defaultSize)
-		copy(newQueue, q.advanceQueue)
-		q.advanceQueue = newQueue
-	}
 	q.advanceQueue = append(q.advanceQueue, item)
 	//
 	l := len(q.advanceQueue) - 1

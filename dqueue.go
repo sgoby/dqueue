@@ -32,7 +32,7 @@ func NewDQueue(ctx context.Context) *DQueue {
 	q := &DQueue{
 		generalQueue:   make([]interface{}, 0, defaultSize),
 		generalMu:      new(sync.Mutex),
-		mJobDelayQueue: newJobList(),
+		mJobDelayQueue: newSliceQueue(),
 	}
 	q.ctx, q.ctxCancel = context.WithCancel(ctx)
 	go q.runDelayWatch()
@@ -44,11 +44,6 @@ func (q *DQueue) Put(vals ...interface{}) (n int) {
 	n = len(vals)
 	if n > 0 {
 		q.generalMu.Lock()
-		if len(q.generalQueue)+len(vals) > cap(q.generalQueue) {
-			newQueue := make([]interface{}, len(q.generalQueue), cap(q.generalQueue)+defaultSize)
-			copy(newQueue, q.generalQueue)
-			q.generalQueue = newQueue
-		}
 		q.generalQueue = append(q.generalQueue, vals...)
 		q.generalMu.Unlock()
 	}

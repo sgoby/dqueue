@@ -30,7 +30,7 @@ func Test_put(t *testing.T){
 	for i := 0; i < 10000;i++{
 		wg.Add(1)
 		go func(num int){
-			for j := 0; j < 1;j++ {
+			for j := 0; j < 100;j++ {
 				q.DelayPut(time.Second*time.Duration(num), "asdfasdf000000")
 			}
 			wg.Done()
